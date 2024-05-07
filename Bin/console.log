@@ -1,4 +1,4 @@
-//-------------------------- 5/2/2024 -- 14:56:35 -----
+//-------------------------- 5/7/2024 -- 19:10:59 -----
 Processor Init:
    Intel (unknown, Pentium Pro/II/III family), ~2.27 Ghz
      (timed at roughly 2.27 Ghz)
@@ -20,10 +20,10 @@ Initializing chunk mappings...
    o 'TEXT' maps to TextChunk
    o 'SCHK' maps to UnknownChunk
    o 'SCHK' maps to SimChunk
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/main.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/main.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/main.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/main.cs.
  % - Initializing Common
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/preferences/defaultPrefs.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/preferences/defaultPrefs.cs.
 Reading Display Device information...
    Primary Display Device Found:
       Vendor Id: VEN_0000
@@ -31,12 +31,12 @@ Reading Display Device information...
 
 Using OpenGL rendering. Fullscreen: 0
 
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/xml.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/properties.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/common.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/audio.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/canvas.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/cursor.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/xml.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/properties.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/common.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/audio.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/canvas.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/cursor.cs.
 Video Init:
    Accelerated OpenGL display device detected.
    Accelerated D3D device not detected.
@@ -77,48 +77,48 @@ Max Texture Size reported as: 16384
 Setting screen mode to 800x600x32 (w)...
 OpenAL Driver Init:
    Failed to initialize driver.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/profiles.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/cursors.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/messageBoxOk.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/messageBoxYesNo.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/messageBoxYesNoCancel.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/messageBoxOKCancel.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/messageBoxOKCancelDetailsDlg.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/messagePopup.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/options.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/remap.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/console.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/NetworkMenu.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/startServer.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/joinServer.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/waitingForServer.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/helpDlg.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/messageBox.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/help.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gui/chatGui.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/screenshot.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/metrics.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/Gui/FrameOverlayGui.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/scriptDoc.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/keybindings.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/options.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/levelManagement.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/projectManagement.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/projectResources.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/common/gameScripts/align.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/profiles.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/cursors.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/messageBoxOk.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/messageBoxYesNo.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/messageBoxYesNoCancel.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/messageBoxOKCancel.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/messageBoxOKCancelDetailsDlg.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/messagePopup.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/options.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/remap.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/console.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/NetworkMenu.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/startServer.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/joinServer.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/waitingForServer.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/helpDlg.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/messageBox.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/help.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gui/chatGui.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/screenshot.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/metrics.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/Gui/FrameOverlayGui.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/scriptDoc.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/keybindings.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/options.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/levelManagement.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/projectManagement.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/projectResources.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts/align.cs.
 
 FunCode (v1.7.5) initialized...
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/managed/datablocks.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/managed/persistent.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/managed/brushes.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/gameScripts/datablocks.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/gameScripts/guiProfiles.cs.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/gui/mainScreen.gui.
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/gameScripts/game.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/managed/datablocks.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/managed/persistent.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/managed/brushes.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/gameScripts/datablocks.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/gameScripts/guiProfiles.cs.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/gui/mainScreen.gui.
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/gameScripts/game.cs.
 Activating DirectInput...
 DirectInput joystick failed to enable!
-Compiling D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/data/levels/level.t2d...
-Loading compiled script D:/C++ 历史代码/FunCode/KillInsectsDemo/Bin/game/data/levels/level.t2d.
+Compiling D:/C++ history/FunCode/Killnsects/Bin/game/data/levels/level.t2d...
+Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/data/levels/level.t2d.
 DirectInput deactivated.
 Shutting down the OpenGL display device...
 Making the GL rendering context not current...

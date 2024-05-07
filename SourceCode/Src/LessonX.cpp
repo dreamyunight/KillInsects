@@ -7,6 +7,9 @@
 #include <Stdio.h>
 #include "CommonClass.h"
 #include "LessonX.h"
+
+#include <vector>
+using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 //
 //
@@ -102,6 +105,7 @@ void CGameMain::GameRun( float fDeltaTime )
         countdown->SetTextValue(countdownTime -countPassedTime);
 		if(countPassedTime >= countdownTime){	//经过的时间超过countdownTime
 			countdown->SetSpriteVisible(false);	//隐藏countdown
+			MakeSprite();
 			countPassedTime = 0;		//重置经过的时间，为下一轮游戏做准备
 			m_iGameState = 4;		//切换g_iGameState 3->4
 		}
@@ -142,4 +146,23 @@ void CGameMain::OnKeyDown( const int iKey, const bool bAltPress, const bool bShi
 		countdown->SetSpriteVisible(true);	//显示倒计时文本框
 		kaishi->SetSpriteVisible(false);		//隐藏“空格开始”
 	}
+}
+void CGameMain::MakeSprite(){
+    int minX		=	CSystem::GetScreenLeft() + 5;
+    int maxX		=	CSystem::GetScreenRight() - 5;
+    int minY		=	CSystem::GetScreenBottom() - 5;
+    int maxY		=	CSystem::GetScreenTop() + 5;
+    int	iPosX = 0, iPosY = 0;		//随机产生的横纵坐标位置
+	int iLoop;	//循环控制变量
+	for( iLoop = 0; iLoop < m_iMosquitoCount; iLoop++ )
+	{
+		char *szName = CSystem::MakeSpriteName("wenzi",iLoop);	//利用iLoop产生不同的蚊子名
+		CSprite *wenzi = new CSprite(szName);
+		wenzi->CloneSprite("wenziTemplate");	//复制wenziTemplate
+		iPosX	=	CSystem::RandomRange(minX, maxX);		//随机产生X坐标
+		iPosY	=	CSystem::RandomRange(minY, maxY);		//随机产生Y坐标
+		wenzi->SetSpritePosition(iPosX,iPosY);  //设置产生蚊子的位置
+		m_mosquitos.push_back(wenzi);		//压入vector中集中管理
+	}
+
 }

@@ -28,7 +28,7 @@ private:
     CSprite			*kaishi;			//“空格开始”精灵
 
 
-    vector<CAnimateSprite*>  m_mosquitos;
+    vector<CSprite*>m_mosquitos;
     int				m_iMosquitoCount;
 
 public:
@@ -51,6 +51,8 @@ public:
 	void			OnMouseClick( const int iMouseType, const float fMouseX, const float fMouseY );
 
     void            OnKeyDown( const int iKey, const bool bAltPress, const bool bShiftPress, const bool bCtrlPress );
+
+    void            MakeSprite();
 };
 
 /////////////////////////////////////////////////////////////////////////////////

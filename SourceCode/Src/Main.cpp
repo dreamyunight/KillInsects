@@ -69,6 +69,7 @@ void CSystem::OnMouseUp( const int iMouseType, const float fMouseX, const float 
 void CSystem::OnKeyDown( const int iKey, const bool bAltPress, const bool bShiftPress, const bool bCtrlPress )
 {
 	// 可以在此添加游戏需要的响应函数
+	g_GameMain.OnKeyDown(iKey, bAltPress, bShiftPress, bCtrlPress);
 
 }
 //==========================================================================

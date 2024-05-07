@@ -21,8 +21,11 @@ CGameMain		g_GameMain;
 // 构造函数
 CGameMain::CGameMain()
 {
-	m_iGameState			=	1;
+	m_iGameState			= 1;
 	paizi                   = new CSprite("paizi");
+	countdown               = new CTextSprite("countdown");
+    kaishi                  = new CSprite("kaishi");
+
 }
 //==============================================================================
 //
@@ -50,6 +53,9 @@ void CGameMain::GameMainLoop( float	fDeltaTime )
 
 		// 游戏进行中，处理各种游戏逻辑
 	case 2:
+    case 3:
+    case 4:
+
 		{
 			// TODO 修改此处游戏循环条件，完成正确游戏逻辑
 			if( true )
@@ -75,15 +81,32 @@ void CGameMain::GameMainLoop( float	fDeltaTime )
 // 每局开始前进行初始化，清空上一局相关数据
 void CGameMain::GameInit()
 {
-    CSystem::ShowCursor(false);	//隐藏鼠标
+    CSystem::ShowCursor(false);	                                //隐藏鼠标
     m_fRotateTime           = 0.f;
     m_fOldRotation          = paizi->GetSpriteRotation();		//获取拍子的初始角度
+
+    countdownTime = 6;		                                    //倒计时时间为5s
+    countPassedTime = 0.f;
+    countdown->SetSpriteVisible(false);		                    //设置倒计时不可见
+
+    m_iMosquitoCount = 15;
+
 }
 //=============================================================================
 //
 // 每局游戏进行中
 void CGameMain::GameRun( float fDeltaTime )
 {
+    if(m_iGameState==3){	//m_iGameState 为3时才执行
+		countPassedTime += fDeltaTime;	//统计经过的时间，并存储到countPassedTime
+        countdown->SetTextValue(countdownTime -countPassedTime);
+		if(countPassedTime >= countdownTime){	//经过的时间超过countdownTime
+			countdown->SetSpriteVisible(false);	//隐藏countdown
+			countPassedTime = 0;		//重置经过的时间，为下一轮游戏做准备
+			m_iGameState = 4;		//切换g_iGameState 3->4
+		}
+    }
+
     if(m_fRotateTime > 0)	{
 		m_fRotateTime -= fDeltaTime;	//每经过fDeltaTime，拍子旋转的时间也少了fDeltaTime
 		if(m_fRotateTime <= 0){	//经过了0.2s以后
@@ -100,14 +123,23 @@ void CGameMain::GameEnd()
 }
 //使拍子的位置和鼠标一致
 void CGameMain::OnMouseMove( const float fMouseX, const float fMouseY ){
-	paizi->SetSpritePosition(fMouseX, fMouseY);	//使拍子的位置和鼠标一致
+	if(m_iGameState==4)
+        paizi->SetSpritePosition(fMouseX, fMouseY);	//使拍子的位置和鼠标一致
 }
 //
 void CGameMain::OnMouseClick( const int iMouseType, const float fMouseX, const float fMouseY ){
-	if(iMouseType == MOUSE_LEFT)	//鼠标左键按下
+	if(iMouseType == MOUSE_LEFT && m_iGameState == 4)	//鼠标左键按下
 	{
 		paizi->SetSpriteRotation(m_fOldRotation - 20);		//设置拍子的旋转角，为初始值-10
 		m_fRotateTime	=	0.2f;	//拍打的时间间隔 0.2s，即0.2s后恢复拍子初始角度
 	}
 }
 
+void CGameMain::OnKeyDown( const int iKey, const bool bAltPress, const bool bShiftPress, const bool bCtrlPress ){
+	if( KEY_SPACE == iKey && 2 ==  m_iGameState )	//按下空格且游戏状态为2时
+	{
+		m_iGameState =	3;	//设置游戏状态进入倒计时，即3
+		countdown->SetSpriteVisible(true);	//显示倒计时文本框
+		kaishi->SetSpriteVisible(false);		//隐藏“空格开始”
+	}
+}

@@ -8,6 +8,8 @@
 #include "CommonClass.h"
 #include "LessonX.h"
 
+#include <ctime>
+#include <cstdlib>
 #include <vector>
 using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,8 +101,13 @@ void CGameMain::GameInit()
 
     m_iGameScore            = 0;                                //初始化得分
 
+	m_fGameTime             = 30.f;		                        //初始化游戏时间为30s
 
-	m_fGameTime             = 10.f;		                        //初始化游戏时间为10s
+	m_fAppearTime = 0.5f;
+    m_fScreenLeft = CSystem::GetScreenLeft();
+    m_fScreenRight = CSystem::GetScreenRight();
+    m_fScreenBottom = CSystem::GetScreenBottom();
+    m_fScreenTop = CSystem::GetScreenTop();
 
 }
 //=============================================================================
@@ -113,7 +120,7 @@ void CGameMain::GameRun( float fDeltaTime )
         countdown->SetTextValue(countdownTime -countPassedTime);
 		if(countPassedTime >= countdownTime){	//经过的时间超过countdownTime
 			countdown->SetSpriteVisible(false);	//隐藏countdown
-			MakeSprite();
+			//MakeSprite_NoFly();//生成飞虫
 			countPassedTime = 0;		//重置经过的时间，为下一轮游戏做准备
 			m_iGameState = 4;		//切换g_iGameState 3->4
 		}
@@ -121,6 +128,7 @@ void CGameMain::GameRun( float fDeltaTime )
         m_fGameTime -= fDeltaTime;
 		if(m_fGameTime > 0){
 			gameTime->SetTextValue(m_fGameTime);	//若游戏时间未结束，则显示剩余的游戏时间
+			MakeSprite_Fly(fDeltaTime);//生成飞虫
 		}else{
 			m_iGameState = 2;		//若游戏时间结束，完成g_iGameState 2->0的转换
 			kaishi->SetSpriteVisible(true);	//显示“空格开始”
@@ -156,12 +164,16 @@ void CGameMain::OnMouseClick( const int iMouseType, const float fMouseX, const f
         		//遍历判定蚊子是否被击中
 		float fX,fY;
 		for(int i=0;i<m_mosquitos.size();i++){		//遍历vector中的蚊子
-			fX = m_mosquitos[i]->GetSpritePositionX();	//获取蚊子所在的横坐标
-			fY = m_mosquitos[i]->GetSpritePositionY();	//获取蚊子所在的纵坐标
+			fX = m_mosquitos[i]->cs->GetSpritePositionX();	//获取蚊子所在的横坐标
+			fY = m_mosquitos[i]->cs->GetSpritePositionY();	//获取蚊子所在的纵坐标
 			if(paizi->IsPointInSprite(fX,fY))			//判断蚊子是否在拍子的范围内
 			{
-				m_mosquitos[i]->DeleteSprite();	//删除该蚊子
-				m_iGameScore++;							//每打一只蚊子加一分
+				m_mosquitos[i]->cs->DeleteSprite();	//删除该蚊子
+				if(m_mosquitos[i]->speed<25){//每打到的飞虫的速度加分
+                    m_iGameScore+= m_mosquitos[i]->speed/5;
+                }else {
+                    m_iGameScore+= (m_mosquitos[i]->speed/5 + m_mosquitos[i]->speed/10);
+                }
 				score->SetTextValue(m_iGameScore);
                 break;
 			}
@@ -175,10 +187,18 @@ void CGameMain::OnKeyDown( const int iKey, const bool bAltPress, const bool bShi
 		m_iGameState =	3;	//设置游戏状态进入倒计时，即3
 		countdown->SetSpriteVisible(true);	//显示倒计时文本框
 		kaishi->SetSpriteVisible(false);		//隐藏“空格开始”
-
+        m_iGameScore = 0.f;		//初始化新一轮游戏分数
+		m_fGameTime = 30.f;		//初始化新一轮游戏时间
+		score->SetTextValue(m_iGameScore);
+		gameTime->SetTextValue(m_fGameTime);
+		for(int i=0;i<m_mosquitos.size();i++){	//删除上一轮游戏中剩余的蚊子
+			m_mosquitos[i]->cs->DeleteSprite();
+		}
+		m_mosquitos.clear();	//清空vector
 	}
 }
-void CGameMain::MakeSprite(){
+/*
+void CGameMain::MakeSprite_NoFly(){
     int minX		=	CSystem::GetScreenLeft() + 5;
     int maxX		=	CSystem::GetScreenRight() - 5;
     int minY		=	CSystem::GetScreenBottom() - 5;
@@ -195,5 +215,58 @@ void CGameMain::MakeSprite(){
 		wenzi->SetSpritePosition(iPosX,iPosY);  //设置产生蚊子的位置
 		m_mosquitos.push_back(wenzi);		//压入vector中集中管理
 	}
+}*/
 
+void CGameMain::MakeSprite_Fly( float fDeltaTime ){
+    m_fAppearTime -= fDeltaTime;	//计算飞虫的剩余产生时间
+    if(m_fAppearTime<0){	//时间到，可以产生飞虫
+		m_fAppearTime = 0.5f;		//重置产生飞虫的时间
+		int iDir = CSystem::RandomRange(0,3);	//随机一个方向
+		float fposX,fposY;
+        switch(iDir){
+		case 0:		//top
+			fposX = CSystem::RandomRange(m_fScreenLeft-5.f, m_fScreenRight+5.f);
+			fposY = CSystem::RandomRange(m_fScreenTop-5.f, m_fScreenTop+5.f);
+			break;
+		case 1:		//bottom
+			fposX = CSystem::RandomRange(m_fScreenLeft-5.f, m_fScreenRight+5.f);
+			fposY =	CSystem::RandomRange(m_fScreenBottom, m_fScreenBottom+5.f);
+			break;
+		case 2:		//left
+			fposX = CSystem::RandomRange(m_fScreenLeft-5.f,m_fScreenLeft);
+			fposY = CSystem::RandomRange(m_fScreenTop-5.f, m_fScreenBottom+5.f);
+			break;
+		case 3:		//right
+			fposX = CSystem::RandomRange(m_fScreenRight, m_fScreenRight+5.f);
+			fposY = CSystem::RandomRange(m_fScreenTop-5.f, m_fScreenBottom+5.f);
+			break;
+        }
+        srand((unsigned)time(0));
+        int randTemplate = (rand() % (2-0+1))+ 0;//使用 (rand() % (b-a+1))+ a，取得 [a,b] 的随机整数
+		Mosquito *m = new Mosquito;	//动态分配空间
+		m->speed = CSystem::RandomRange(10, 40);		//随机速度
+		switch(randTemplate){
+        case 0:
+            m->szName = CSystem::MakeSpriteName("wenzi",m_iMosquitoCount++);		//命名
+            m->cs = new CSprite(m->szName);	//蚊子精灵指针也保存在struct数组中
+            m->cs ->CloneSprite("wenziTemplate");	//两重引用
+            break;
+        case 1:
+            m->szName = CSystem::MakeSpriteName("maggot",m_iMosquitoCount++);		//命名
+            m->cs = new CSprite(m->szName);	//蚊子精灵指针也保存在struct数组中
+            m->cs ->CloneSprite("maggotTemplate");	//两重引用
+            break;
+        case 2:
+            m->szName = CSystem::MakeSpriteName("ufo",m_iMosquitoCount++);		//命名
+            m->cs = new CSprite(m->szName);	//蚊子精灵指针也保存在struct数组中
+            m->cs ->CloneSprite("ufoTemplate");	//两重引用
+            break;
+		}
+		m->cs ->SetSpritePosition(fposX, fposY);
+        m->next = NULL;
+		float fDesX = CSystem::RandomRange(m_fScreenLeft+15.f, m_fScreenRight-15.f);
+		float fDesY =  CSystem::RandomRange(m_fScreenTop+15.f, m_fScreenBottom-15.f);
+		m->cs ->SpriteMoveTo(fDesX, fDesY, m->speed, false);
+		m_mosquitos.push_back(m);		//压入vector中集中管理
+	}
 }

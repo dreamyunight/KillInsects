@@ -25,13 +25,14 @@
 1461255076 d:\c++ history\funcode\killnsects\sourcecode\header\commonclass.h
 	<windows.h>
 
-1715130550 d:\c++ history\funcode\killnsects\sourcecode\header\lessonx.h
+1715150419 d:\c++ history\funcode\killnsects\sourcecode\header\lessonx.h
 	<Windows.h>
 	<vector>
 
-1715131666 source:d:\c++ history\funcode\killnsects\sourcecode\src\lessonx.cpp
+1715153008 source:d:\c++ history\funcode\killnsects\sourcecode\src\lessonx.cpp
 	<Stdio.h>
 	"CommonClass.h"
 	"LessonX.h"
+	<stdlib.h>
 	<vector>
 

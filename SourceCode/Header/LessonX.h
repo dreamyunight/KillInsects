@@ -13,6 +13,16 @@ using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////////
 //
+// 飞虫结构体
+typedef struct mosquitoStruct{
+		char *szName;
+		int speed;
+		CSprite* cs;
+		mosquitoStruct *next;
+}Mosquito;
+
+/////////////////////////////////////////////////////////////////////////////////
+//
 // 游戏总管类。负责处理游戏主循环、游戏初始化、结束等工作
 class	CGameMain
 {
@@ -27,16 +37,20 @@ private:
 	CTextSprite		*countdown;		    //倒计时的文字精灵
     CSprite			*kaishi;			//“空格开始”精灵
 
-
-    vector<CSprite*>m_mosquitos;
-    int				m_iMosquitoCount;
-
-    int					m_iGameScore;	//当前得分
-	CTextSprite			*score;			//score精灵
+    int				m_iGameScore;	    //当前得分
+	CTextSprite		*score;			    //score精灵
 
     float			m_fGameTime;		//游戏时间
 	CTextSprite		*gameTime;		    //游戏时间精灵
 
+	float			m_fAppearTime ;		//蚊子产生的间隔时间
+    int				m_iMosquitoNum ;	//蚊子的数量
+    float			m_fScreenLeft;
+    float			m_fScreenRight;
+    float			m_fScreenTop;
+    float			m_fScreenBottom;
+    vector<Mosquito*>m_mosquitos;
+    int				m_iMosquitoCount;
 
 public:
 	CGameMain();                        //构造函数
@@ -59,7 +73,8 @@ public:
 
     void            OnKeyDown( const int iKey, const bool bAltPress, const bool bShiftPress, const bool bCtrlPress );
 
-    void            MakeSprite();
+    void            MakeSprite_NoFly();
+    void            MakeSprite_Fly( float fDeltaTime );
 };
 
 /////////////////////////////////////////////////////////////////////////////////

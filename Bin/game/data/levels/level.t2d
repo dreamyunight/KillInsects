@@ -108,6 +108,7 @@
       Position = "-2.500 42.500";
       size = "5.000 5.000";
       Layer = "5";
+      WorldLimitMode = "NULL";
       WorldLimitMin = "-50.000 -37.500";
       WorldLimitMax = "50.000 37.500";
          mountID = "6";
@@ -164,12 +165,12 @@
    };
    new t2dTextObject(gameTime) {
       canSaveDynamicFields = "1";
-      Position = "-17.680 -20.000";
+      Position = "-16.743 -20.000";
       size = "9.750 10.000";
       WorldLimitMin = "-50.000 -37.500";
       WorldLimitMax = "50.000 37.500";
-      BlendColor = "0.909804 0.345098 0 1";
-      text = "10";
+      BlendColor = "0.219608 0 0 1";
+      text = "30";
       font = "Arial";
       wordWrap = "0";
       hideOverflow = "1";
@@ -180,7 +181,7 @@
       characterSpacing = "0";
       autoSize = "1";
       fontSizes = "80";
-      textColor = "0.909804 0.345098 0 1";
+      textColor = "0.219608 0 0 1";
       bilinearFilter = "0";
       snapToInteger = "0";
       noUnicode = "0";
@@ -193,7 +194,7 @@
       size = "22.125 10.000";
       WorldLimitMin = "-50.000 -37.500";
       WorldLimitMax = "50.000 37.500";
-      BlendColor = "0.909804 0.294118 0 1";
+      BlendColor = "0.227451 0 0 1";
       text = "Time:";
       font = "Arial";
       wordWrap = "0";
@@ -205,11 +206,33 @@
       characterSpacing = "0";
       autoSize = "1";
       fontSizes = "80";
-      textColor = "0.909804 0.294118 0 1";
+      textColor = "0.227451 0 0 1";
       bilinearFilter = "0";
       snapToInteger = "0";
       noUnicode = "0";
          hideOverlap = "0";
          mountID = "10";
+   };
+   new t2dAnimatedSprite(maggotTemplate) {
+      animationName = "eelsheetImageMapAnimation";
+      canSaveDynamicFields = "1";
+      Position = "-12.500 42.500";
+      size = "5.000 5.000";
+      Layer = "5";
+      WorldLimitMode = "NULL";
+      WorldLimitMin = "-50.000 -37.500";
+      WorldLimitMax = "50.000 37.500";
+         mountID = "11";
+   };
+   new t2dAnimatedSprite(ufoTemplate) {
+      animationName = "miniufoaltAnimation2";
+      canSaveDynamicFields = "1";
+      Position = "-22.500 42.500";
+      size = "5.000 5.000";
+      Layer = "5";
+      WorldLimitMode = "NULL";
+      WorldLimitMin = "-50.000 -37.500";
+      WorldLimitMax = "50.000 37.500";
+         mountID = "12";
    };
 };

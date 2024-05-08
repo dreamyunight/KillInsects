@@ -1,7 +1,7 @@
-//-------------------------- 5/7/2024 -- 19:53:48 -----
+//-------------------------- 5/8/2024 -- 09:38:01 -----
 Processor Init:
-   Intel (unknown, Pentium Pro/II/III family), ~2.27 Ghz
-     (timed at roughly 2.28 Ghz)
+   Intel (unknown, Pentium Pro/II/III family), ~2.30 Ghz
+     (timed at roughly 2.29 Ghz)
    FPU detected
    MMX detected
    SSE detected
@@ -110,7 +110,6 @@ Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/common/gameScripts
 FunCode (v1.7.5) initialized...
 Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/managed/datablocks.cs.
 Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/managed/persistent.cs.
-Compiling D:/C++ history/FunCode/Killnsects/Bin/game/managed/brushes.cs...
 Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/managed/brushes.cs.
 Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/gameScripts/datablocks.cs.
 Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/gameScripts/guiProfiles.cs.
@@ -120,10 +119,6 @@ Activating DirectInput...
 DirectInput joystick failed to enable!
 Compiling D:/C++ history/FunCode/Killnsects/Bin/game/data/levels/level.t2d...
 Loading compiled script D:/C++ history/FunCode/Killnsects/Bin/game/data/levels/level.t2d.
-t2dSceneGraph::addToScene() - Object '1315' is already in a SceneGraph!.
-t2dSceneGraph::addToScene() - Object '1316' is already in a SceneGraph!.
-t2dSceneGraph::addToScene() - Object '1317' is already in a SceneGraph!.
-t2dSceneGraph::addToScene() - Object '1318' is already in a SceneGraph!.
 t2dSceneGraph::addToScene() - Object '1319' is already in a SceneGraph!.
 t2dSceneGraph::addToScene() - Object '1320' is already in a SceneGraph!.
 t2dSceneGraph::addToScene() - Object '1321' is already in a SceneGraph!.
@@ -135,6 +130,10 @@ t2dSceneGraph::addToScene() - Object '1326' is already in a SceneGraph!.
 t2dSceneGraph::addToScene() - Object '1327' is already in a SceneGraph!.
 t2dSceneGraph::addToScene() - Object '1328' is already in a SceneGraph!.
 t2dSceneGraph::addToScene() - Object '1329' is already in a SceneGraph!.
+t2dSceneGraph::addToScene() - Object '1330' is already in a SceneGraph!.
+t2dSceneGraph::addToScene() - Object '1331' is already in a SceneGraph!.
+t2dSceneGraph::addToScene() - Object '1332' is already in a SceneGraph!.
+t2dSceneGraph::addToScene() - Object '1333' is already in a SceneGraph!.
 DirectInput deactivated.
 Shutting down the OpenGL display device...
 Making the GL rendering context not current...

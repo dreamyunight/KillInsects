@@ -31,6 +31,13 @@ private:
     vector<CSprite*>m_mosquitos;
     int				m_iMosquitoCount;
 
+    int					m_iGameScore;	//当前得分
+	CTextSprite			*score;			//score精灵
+
+    float			m_fGameTime;		//游戏时间
+	CTextSprite		*gameTime;		    //游戏时间精灵
+
+
 public:
 	CGameMain();                        //构造函数
 	~CGameMain();                       //析构函数

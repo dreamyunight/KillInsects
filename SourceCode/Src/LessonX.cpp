@@ -28,6 +28,8 @@ CGameMain::CGameMain()
 	paizi                   = new CSprite("paizi");
 	countdown               = new CTextSprite("countdown");
     kaishi                  = new CSprite("kaishi");
+    score                   = new CTextSprite("score");
+	gameTime                = new CTextSprite("gameTime");
 
 }
 //==============================================================================
@@ -88,11 +90,17 @@ void CGameMain::GameInit()
     m_fRotateTime           = 0.f;
     m_fOldRotation          = paizi->GetSpriteRotation();		//获取拍子的初始角度
 
-    countdownTime = 6;		                                    //倒计时时间为5s
-    countPassedTime = 0.f;
-    countdown->SetSpriteVisible(false);		                    //设置倒计时不可见
+    countdownTime           = 6;		                        //倒计时时间为5s
+    countPassedTime         = 0.f;
+    countdown->SetSpriteVisible(false);
+    //设置倒计时不可见
 
-    m_iMosquitoCount = 15;
+    m_iMosquitoCount        = 15;
+
+    m_iGameScore            = 0;                                //初始化得分
+
+
+	m_fGameTime             = 10.f;		                        //初始化游戏时间为10s
 
 }
 //=============================================================================
@@ -109,8 +117,17 @@ void CGameMain::GameRun( float fDeltaTime )
 			countPassedTime = 0;		//重置经过的时间，为下一轮游戏做准备
 			m_iGameState = 4;		//切换g_iGameState 3->4
 		}
+    }else if(m_iGameState==4){
+        m_fGameTime -= fDeltaTime;
+		if(m_fGameTime > 0){
+			gameTime->SetTextValue(m_fGameTime);	//若游戏时间未结束，则显示剩余的游戏时间
+		}else{
+			m_iGameState = 2;		//若游戏时间结束，完成g_iGameState 2->0的转换
+			kaishi->SetSpriteVisible(true);	//显示“空格开始”
+			m_fGameTime = 0;
+			gameTime->SetTextValue(m_fGameTime);
+		}
     }
-
     if(m_fRotateTime > 0)	{
 		m_fRotateTime -= fDeltaTime;	//每经过fDeltaTime，拍子旋转的时间也少了fDeltaTime
 		if(m_fRotateTime <= 0){	//经过了0.2s以后
@@ -127,7 +144,7 @@ void CGameMain::GameEnd()
 }
 //使拍子的位置和鼠标一致
 void CGameMain::OnMouseMove( const float fMouseX, const float fMouseY ){
-	if(m_iGameState==4)
+	if(m_iGameState == 4)
         paizi->SetSpritePosition(fMouseX, fMouseY);	//使拍子的位置和鼠标一致
 }
 //
@@ -136,6 +153,19 @@ void CGameMain::OnMouseClick( const int iMouseType, const float fMouseX, const f
 	{
 		paizi->SetSpriteRotation(m_fOldRotation - 20);		//设置拍子的旋转角，为初始值-10
 		m_fRotateTime	=	0.2f;	//拍打的时间间隔 0.2s，即0.2s后恢复拍子初始角度
+        		//遍历判定蚊子是否被击中
+		float fX,fY;
+		for(int i=0;i<m_mosquitos.size();i++){		//遍历vector中的蚊子
+			fX = m_mosquitos[i]->GetSpritePositionX();	//获取蚊子所在的横坐标
+			fY = m_mosquitos[i]->GetSpritePositionY();	//获取蚊子所在的纵坐标
+			if(paizi->IsPointInSprite(fX,fY))			//判断蚊子是否在拍子的范围内
+			{
+				m_mosquitos[i]->DeleteSprite();	//删除该蚊子
+				m_iGameScore++;							//每打一只蚊子加一分
+				score->SetTextValue(m_iGameScore);
+                break;
+			}
+		}
 	}
 }
 
@@ -145,6 +175,7 @@ void CGameMain::OnKeyDown( const int iKey, const bool bAltPress, const bool bShi
 		m_iGameState =	3;	//设置游戏状态进入倒计时，即3
 		countdown->SetSpriteVisible(true);	//显示倒计时文本框
 		kaishi->SetSpriteVisible(false);		//隐藏“空格开始”
+
 	}
 }
 void CGameMain::MakeSprite(){

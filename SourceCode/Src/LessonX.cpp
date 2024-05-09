@@ -33,6 +33,9 @@ CGameMain::CGameMain()
     score                   = new CTextSprite("score");
 	gameTime                = new CTextSprite("gameTime");
 
+    mapState                = false;
+	map1                    = new CSprite("Map1");
+	map2                    = new CSprite("Map2");
 }
 //==============================================================================
 //
@@ -131,7 +134,11 @@ void CGameMain::GameRun( float fDeltaTime )
 			MakeSprite_Fly(fDeltaTime);//生成飞虫
 		}else{
 			m_iGameState = 2;		//若游戏时间结束，完成g_iGameState 2->0的转换
-			kaishi->SetSpriteVisible(true);	//显示“空格开始”
+			//实现地图切换
+			map1->SetSpriteVisible(mapState);
+			mapState=!mapState;
+			map2->SetSpriteVisible(mapState);
+			kaishi->SetSpriteVisible(true);            //显示“空格开始”
 			m_fGameTime = 0;
 			gameTime->SetTextValue(m_fGameTime);
 		}

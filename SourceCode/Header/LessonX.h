@@ -52,6 +52,10 @@ private:
     vector<Mosquito*>m_mosquitos;
     int				m_iMosquitoCount;
 
+    bool             mapState;
+    CSprite		    *map1;
+    CSprite         *map2;
+
 public:
 	CGameMain();                        //构造函数
 	~CGameMain();                       //析构函数

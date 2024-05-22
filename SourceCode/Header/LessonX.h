@@ -9,11 +9,12 @@
 //
 #include <Windows.h>
 #include <vector>
+#include <mysql.h>
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-// ·É³æ½á¹¹Ìå
+// é£è™«ç»“æ„ä½“
 typedef struct mosquitoStruct{
 		char *szName;
 		int speed;
@@ -23,28 +24,28 @@ typedef struct mosquitoStruct{
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-// ÓÎÏ·×Ü¹ÜÀà¡£¸ºÔğ´¦ÀíÓÎÏ·Ö÷Ñ­»·¡¢ÓÎÏ·³õÊ¼»¯¡¢½áÊøµÈ¹¤×÷
+// æ¸¸æˆæ€»ç®¡ç±»ã€‚è´Ÿè´£å¤„ç†æ¸¸æˆä¸»å¾ªç¯ã€æ¸¸æˆåˆå§‹åŒ–ã€ç»“æŸç­‰å·¥ä½œ
 class	CGameMain
 {
 private:
-	int				m_iGameState;		// ÓÎÏ·×´Ì¬£¬0£º½áÊø»òÕßµÈ´ı¿ªÊ¼£»1£º³õÊ¼»¯£»2±íÊ¾Î´¿ªÊ¼£¨´ËÊ±ÅÄ×Ó²»ËæÊó±êÒÆ¶¯£©£¬3 ±íÊ¾µ¹¼ÆÊ±½×¶Î£¬ 4±íÊ¾¿ªÊ¼ÅÄ×Ó¿ÉÒÔËæÊó±êÒÆ¶¯²¢ÅÄ´ò
-    float			m_fRotateTime;		// ÅÄ×ÓÅÄÏÂºó¾àÀë¸´Î»»¹²î¶àÉÙÊ±¼ä
-    float			m_fOldRotation;		// ÅÄ×ÓµÄ³õÊ¼½Ç¶È
+	int				m_iGameState;		// æ¸¸æˆçŠ¶æ€ï¼Œ0ï¼šç»“æŸæˆ–è€…ç­‰å¾…å¼€å§‹ï¼›1ï¼šåˆå§‹åŒ–ï¼›2è¡¨ç¤ºæœªå¼€å§‹ï¼ˆæ­¤æ—¶æ‹å­ä¸éšé¼ æ ‡ç§»åŠ¨ï¼‰ï¼Œ3 è¡¨ç¤ºå€’è®¡æ—¶é˜¶æ®µï¼Œ 4è¡¨ç¤ºå¼€å§‹æ‹å­å¯ä»¥éšé¼ æ ‡ç§»åŠ¨å¹¶æ‹æ‰“
+    float			m_fRotateTime;		// æ‹å­æ‹ä¸‹åè·ç¦»å¤ä½è¿˜å·®å¤šå°‘æ—¶é—´
+    float			m_fOldRotation;		// æ‹å­çš„åˆå§‹è§’åº¦
     CSprite		    *paizi;
 
-    int				countdownTime ;	    //µ¹¼ÆÊ±Ê±¼ä
-	float			countPassedTime;	//µ¹¼ÆÊ±¾­¹ıµÄÊ±¼ä
-	CTextSprite		*countdown;		    //µ¹¼ÆÊ±µÄÎÄ×Ö¾«Áé
-    CSprite			*kaishi;			//¡°¿Õ¸ñ¿ªÊ¼¡±¾«Áé
+    int				countdownTime ;	    //å€’è®¡æ—¶æ—¶é—´
+	float			countPassedTime;	//å€’è®¡æ—¶ç»è¿‡çš„æ—¶é—´
+	CTextSprite		*countdown;		    //å€’è®¡æ—¶çš„æ–‡å­—ç²¾çµ
+    CSprite			*kaishi;			//â€œç©ºæ ¼å¼€å§‹â€ç²¾çµ
 
-    int				m_iGameScore;	    //µ±Ç°µÃ·Ö
-	CTextSprite		*score;			    //score¾«Áé
+    int				m_iGameScore;	    //å½“å‰å¾—åˆ†
+	CTextSprite		*score;			    //scoreç²¾çµ
 
-    float			m_fGameTime;		//ÓÎÏ·Ê±¼ä
-	CTextSprite		*gameTime;		    //ÓÎÏ·Ê±¼ä¾«Áé
+    float			m_fGameTime;		//æ¸¸æˆæ—¶é—´
+	CTextSprite		*gameTime;		    //æ¸¸æˆæ—¶é—´ç²¾çµ
 
-	float			m_fAppearTime ;		//ÎÃ×Ó²úÉúµÄ¼ä¸ôÊ±¼ä
-    int				m_iMosquitoNum ;	//ÎÃ×ÓµÄÊıÁ¿
+	float			m_fAppearTime ;		//èšŠå­äº§ç”Ÿçš„é—´éš”æ—¶é—´
+    int				m_iMosquitoNum ;	//èšŠå­çš„æ•°é‡
     float			m_fScreenLeft;
     float			m_fScreenRight;
     float			m_fScreenTop;
@@ -52,21 +53,23 @@ private:
     vector<Mosquito*>m_mosquitos;
     int				m_iMosquitoCount;
 
-    bool             mapState;
+    bool            mapState;
     CSprite		    *map1;
     CSprite         *map2;
 
-public:
-	CGameMain();                        //¹¹Ôìº¯Êı
-	~CGameMain();                       //Îö¹¹º¯Êı
+	//CTextSprite		* error;
 
-	// Get·½·¨
+public:
+	CGameMain();                        //æ„é€ å‡½æ•°
+	~CGameMain();                       //ææ„å‡½æ•°
+
+	// Getæ–¹æ³•
 	int				GetGameState()											{ return m_iGameState; }
 
-	// Set·½·¨
+	// Setæ–¹æ³•
 	void			SetGameState( const int iState )				{ m_iGameState	=	iState; }
 
-	// ÓÎÏ·Ö÷Ñ­»·µÈ
+	// æ¸¸æˆä¸»å¾ªç¯ç­‰
 	void			GameMainLoop( float	fDeltaTime );
 	void			GameInit();
 	void			GameRun( float fDeltaTime );
@@ -77,8 +80,10 @@ public:
 
     void            OnKeyDown( const int iKey, const bool bAltPress, const bool bShiftPress, const bool bCtrlPress );
 
-    void            MakeSprite_NoFly();
+    //void          MakeSprite_NoFly();
     void            MakeSprite_Fly( float fDeltaTime );
+
+	//bool			ConnectMySQL(int m_iGameScore);
 };
 
 /////////////////////////////////////////////////////////////////////////////////

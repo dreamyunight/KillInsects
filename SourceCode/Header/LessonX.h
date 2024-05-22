@@ -9,7 +9,7 @@
 //
 #include <Windows.h>
 #include <vector>
-#include <mysql.h>
+//#include <mysql.h>
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////////

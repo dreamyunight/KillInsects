@@ -11,6 +11,9 @@
 #include <ctime>
 #include <cstdlib>
 #include <vector>
+#include <vld.h>
+
+//#include <mysql.h>
 using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -19,68 +22,79 @@ CGameMain		g_GameMain;
 
 //==============================================================================
 //
-// ´óÌåµÄ³ÌĞòÁ÷³ÌÎª£ºGameMainLoopº¯ÊıÎªÖ÷Ñ­»·º¯Êı£¬ÔÚÒıÇæÃ¿Ö¡Ë¢ĞÂÆÁÄ»Í¼ÏñÖ®ºó£¬¶¼»á±»µ÷ÓÃÒ»´Î¡£
+// å¤§ä½“çš„ç¨‹åºæµç¨‹ä¸ºï¼šGameMainLoopå‡½æ•°ä¸ºä¸»å¾ªç¯å‡½æ•°ï¼Œåœ¨å¼•æ“æ¯å¸§åˆ·æ–°å±å¹•å›¾åƒä¹‹åï¼Œéƒ½ä¼šè¢«è°ƒç”¨ä¸€æ¬¡ã€‚
 
 //==============================================================================
 //
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 CGameMain::CGameMain()
 {
-	m_iGameState			= 1;
-	paizi                   = new CSprite("paizi");
-	countdown               = new CTextSprite("countdown");
-    kaishi                  = new CSprite("kaishi");
-    score                   = new CTextSprite("score");
-	gameTime                = new CTextSprite("gameTime");
+	_CrtSetBreakAlloc(106);//
 
-    mapState                = false;
-	map1                    = new CSprite("Map1");
-	map2                    = new CSprite("Map2");
+	m_iGameState = 1;
+	paizi = new CSprite("paizi");
+	countdown = new CTextSprite("countdown");
+	kaishi = new CSprite("kaishi");
+	score = new CTextSprite("score");
+	gameTime = new CTextSprite("gameTime");
+
+	mapState = false;
+	map1 = new CSprite("Map1");
+	map2 = new CSprite("Map2");
+
+	//error = new CTextSprite("error");
 }
 //==============================================================================
 //
-// Îö¹¹º¯Êı
+// ææ„å‡½æ•°
 CGameMain::~CGameMain()
 {
+	free(paizi);
+	free(countdown);
+	free(kaishi);
+	free(score);
+	free(gameTime);
+	free(map1);
+	free(map2);
 }
 
 //==============================================================================
 //
-// ÓÎÏ·Ö÷Ñ­»·£¬´Ëº¯Êı½«±»²»Í£µÄµ÷ÓÃ£¬ÒıÇæÃ¿Ë¢ĞÂÒ»´ÎÆÁÄ»£¬´Ëº¯Êı¼´±»µ÷ÓÃÒ»´Î
-// ÓÃÒÔ´¦ÀíÓÎÏ·µÄ¿ªÊ¼¡¢½øĞĞÖĞ¡¢½áÊøµÈ¸÷ÖÖ×´Ì¬.
-// º¯Êı²ÎÊıfDeltaTime : ÉÏ´Îµ÷ÓÃ±¾º¯Êıµ½´Ë´Îµ÷ÓÃ±¾º¯ÊıµÄÊ±¼ä¼ä¸ô£¬µ¥Î»£ºÃë
-void CGameMain::GameMainLoop( float	fDeltaTime )
+// æ¸¸æˆä¸»å¾ªç¯ï¼Œæ­¤å‡½æ•°å°†è¢«ä¸åœçš„è°ƒç”¨ï¼Œå¼•æ“æ¯åˆ·æ–°ä¸€æ¬¡å±å¹•ï¼Œæ­¤å‡½æ•°å³è¢«è°ƒç”¨ä¸€æ¬¡
+// ç”¨ä»¥å¤„ç†æ¸¸æˆçš„å¼€å§‹ã€è¿›è¡Œä¸­ã€ç»“æŸç­‰å„ç§çŠ¶æ€.
+// å‡½æ•°å‚æ•°fDeltaTime : ä¸Šæ¬¡è°ƒç”¨æœ¬å‡½æ•°åˆ°æ­¤æ¬¡è°ƒç”¨æœ¬å‡½æ•°çš„æ—¶é—´é—´éš”ï¼Œå•ä½ï¼šç§’
+void CGameMain::GameMainLoop(float	fDeltaTime)
 {
-	switch( GetGameState() )
+	switch (GetGameState())
 	{
-		// ³õÊ¼»¯ÓÎÏ·£¬Çå¿ÕÉÏÒ»¾ÖÏà¹ØÊı¾İ
+		// åˆå§‹åŒ–æ¸¸æˆï¼Œæ¸…ç©ºä¸Šä¸€å±€ç›¸å…³æ•°æ®
 	case 1:
-		{
-			GameInit();
-			SetGameState(2); // ³õÊ¼»¯Ö®ºó£¬½«ÓÎÏ·×´Ì¬ÉèÖÃÎª½øĞĞÖĞ
-		}
-		break;
+	{
+		GameInit();
+		SetGameState(2); // åˆå§‹åŒ–ä¹‹åï¼Œå°†æ¸¸æˆçŠ¶æ€è®¾ç½®ä¸ºè¿›è¡Œä¸­
+	}
+	break;
 
-		// ÓÎÏ·½øĞĞÖĞ£¬´¦Àí¸÷ÖÖÓÎÏ·Âß¼­
+	// æ¸¸æˆè¿›è¡Œä¸­ï¼Œå¤„ç†å„ç§æ¸¸æˆé€»è¾‘
 	case 2:
-    case 3:
-    case 4:
+	case 3:
+	case 4:
 
+	{
+		// TODO ä¿®æ”¹æ­¤å¤„æ¸¸æˆå¾ªç¯æ¡ä»¶ï¼Œå®Œæˆæ­£ç¡®æ¸¸æˆé€»è¾‘
+		if (true)
 		{
-			// TODO ĞŞ¸Ä´Ë´¦ÓÎÏ·Ñ­»·Ìõ¼ş£¬Íê³ÉÕıÈ·ÓÎÏ·Âß¼­
-			if( true )
-			{
-				GameRun( fDeltaTime );
-			}
-			else // ÓÎÏ·½áÊø¡£µ÷ÓÃÓÎÏ·½áËãº¯Êı£¬²¢°ÑÓÎÏ·×´Ì¬ĞŞ¸ÄÎª½áÊø×´Ì¬
-			{
-				SetGameState(0);
-				GameEnd();
-			}
+			GameRun(fDeltaTime);
 		}
-		break;
+		else // æ¸¸æˆç»“æŸã€‚è°ƒç”¨æ¸¸æˆç»“ç®—å‡½æ•°ï¼Œå¹¶æŠŠæ¸¸æˆçŠ¶æ€ä¿®æ”¹ä¸ºç»“æŸçŠ¶æ€
+		{
+			SetGameState(0);
+			GameEnd();
+		}
+	}
+	break;
 
-		// ÓÎÏ·½áÊø/µÈ´ı°´¿Õ¸ñ¼ü¿ªÊ¼
+	// æ¸¸æˆç»“æŸ/ç­‰å¾…æŒ‰ç©ºæ ¼é”®å¼€å§‹
 	case 0:
 	default:
 		break;
@@ -88,192 +102,282 @@ void CGameMain::GameMainLoop( float	fDeltaTime )
 }
 //=============================================================================
 //
-// Ã¿¾Ö¿ªÊ¼Ç°½øĞĞ³õÊ¼»¯£¬Çå¿ÕÉÏÒ»¾ÖÏà¹ØÊı¾İ
+// æ¯å±€å¼€å§‹å‰è¿›è¡Œåˆå§‹åŒ–ï¼Œæ¸…ç©ºä¸Šä¸€å±€ç›¸å…³æ•°æ®
 void CGameMain::GameInit()
 {
-    CSystem::ShowCursor(false);	                                //Òş²ØÊó±ê
-    m_fRotateTime           = 0.f;
-    m_fOldRotation          = paizi->GetSpriteRotation();		//»ñÈ¡ÅÄ×ÓµÄ³õÊ¼½Ç¶È
+	CSystem::ShowCursor(false);	                                //éšè—é¼ æ ‡
+	m_fRotateTime = 0.f;
+	m_fOldRotation = paizi->GetSpriteRotation();		//è·å–æ‹å­çš„åˆå§‹è§’åº¦
 
-    countdownTime           = 6;		                        //µ¹¼ÆÊ±Ê±¼äÎª5s
-    countPassedTime         = 0.f;
-    countdown->SetSpriteVisible(false);
-    //ÉèÖÃµ¹¼ÆÊ±²»¿É¼û
+	countdownTime = 6;		                        //å€’è®¡æ—¶æ—¶é—´ä¸º5s
+	countPassedTime = 0.f;
+	countdown->SetSpriteVisible(false);
+	//è®¾ç½®å€’è®¡æ—¶ä¸å¯è§
 
-    m_iMosquitoCount        = 15;
+	m_iMosquitoCount = 15;
 
-    m_iGameScore            = 0;                                //³õÊ¼»¯µÃ·Ö
+	m_iGameScore = 0;                                //åˆå§‹åŒ–å¾—åˆ†
 
-	m_fGameTime             = 30.f;		                        //³õÊ¼»¯ÓÎÏ·Ê±¼äÎª30s
+	m_fGameTime = 30.f;		                        //åˆå§‹åŒ–æ¸¸æˆæ—¶é—´ä¸º30s
 
 	m_fAppearTime = 0.5f;
-    m_fScreenLeft = CSystem::GetScreenLeft();
-    m_fScreenRight = CSystem::GetScreenRight();
-    m_fScreenBottom = CSystem::GetScreenBottom();
-    m_fScreenTop = CSystem::GetScreenTop();
+	m_fScreenLeft = CSystem::GetScreenLeft();
+	m_fScreenRight = CSystem::GetScreenRight();
+	m_fScreenBottom = CSystem::GetScreenBottom();
+	m_fScreenTop = CSystem::GetScreenTop();
 
 }
 //=============================================================================
 //
-// Ã¿¾ÖÓÎÏ·½øĞĞÖĞ
-void CGameMain::GameRun( float fDeltaTime )
+// æ¯å±€æ¸¸æˆè¿›è¡Œä¸­
+void CGameMain::GameRun(float fDeltaTime)
 {
-    if(m_iGameState==3){	//m_iGameState Îª3Ê±²ÅÖ´ĞĞ
-		countPassedTime += fDeltaTime;	//Í³¼Æ¾­¹ıµÄÊ±¼ä£¬²¢´æ´¢µ½countPassedTime
-        countdown->SetTextValue(countdownTime -countPassedTime);
-		if(countPassedTime >= countdownTime){	//¾­¹ıµÄÊ±¼ä³¬¹ıcountdownTime
-			countdown->SetSpriteVisible(false);	//Òş²Øcountdown
-			//MakeSprite_NoFly();//Éú³É·É³æ
-			countPassedTime = 0;		//ÖØÖÃ¾­¹ıµÄÊ±¼ä£¬ÎªÏÂÒ»ÂÖÓÎÏ·×ö×¼±¸
-			m_iGameState = 4;		//ÇĞ»»g_iGameState 3->4
+	if (m_iGameState == 3) {	//m_iGameState ä¸º3æ—¶æ‰æ‰§è¡Œ
+		countPassedTime += fDeltaTime;	//ç»Ÿè®¡ç»è¿‡çš„æ—¶é—´ï¼Œå¹¶å­˜å‚¨åˆ°countPassedTime
+		countdown->SetTextValue(countdownTime - countPassedTime);
+		if (countPassedTime >= countdownTime) {	//ç»è¿‡çš„æ—¶é—´è¶…è¿‡countdownTime
+			countdown->SetSpriteVisible(false);	//éšè—countdown
+			//MakeSprite_NoFly();//ç”Ÿæˆé£è™«
+			countPassedTime = 0;		//é‡ç½®ç»è¿‡çš„æ—¶é—´ï¼Œä¸ºä¸‹ä¸€è½®æ¸¸æˆåšå‡†å¤‡
+			m_iGameState = 4;		//åˆ‡æ¢g_iGameState 3->4
 		}
-    }else if(m_iGameState==4){
-        m_fGameTime -= fDeltaTime;
-		if(m_fGameTime > 0){
-			gameTime->SetTextValue(m_fGameTime);	//ÈôÓÎÏ·Ê±¼äÎ´½áÊø£¬ÔòÏÔÊ¾Ê£ÓàµÄÓÎÏ·Ê±¼ä
-			MakeSprite_Fly(fDeltaTime);//Éú³É·É³æ
-		}else{
-			m_iGameState = 2;		//ÈôÓÎÏ·Ê±¼ä½áÊø£¬Íê³Ég_iGameState 2->0µÄ×ª»»
-			//ÊµÏÖµØÍ¼ÇĞ»»
+	}
+	else if (m_iGameState == 4) {
+		m_fGameTime -= fDeltaTime;
+		if (m_fGameTime > 0) {
+			gameTime->SetTextValue(m_fGameTime);	//è‹¥æ¸¸æˆæ—¶é—´æœªç»“æŸï¼Œåˆ™æ˜¾ç¤ºå‰©ä½™çš„æ¸¸æˆæ—¶é—´
+			MakeSprite_Fly(fDeltaTime);//ç”Ÿæˆé£è™«
+		}
+		else {
+			m_iGameState = 2;		//è‹¥æ¸¸æˆæ—¶é—´ç»“æŸï¼Œå®Œæˆg_iGameState 2->0çš„è½¬æ¢
+			//å®ç°åœ°å›¾åˆ‡æ¢
+			//ConnectMySQL(m_iGameScore);
 			map1->SetSpriteVisible(mapState);
-			mapState=!mapState;
+			mapState = !mapState;
 			map2->SetSpriteVisible(mapState);
-			kaishi->SetSpriteVisible(true);            //ÏÔÊ¾¡°¿Õ¸ñ¿ªÊ¼¡±
+			kaishi->SetSpriteVisible(true);            //æ˜¾ç¤ºâ€œç©ºæ ¼å¼€å§‹â€
 			m_fGameTime = 0;
 			gameTime->SetTextValue(m_fGameTime);
 		}
-    }
-    if(m_fRotateTime > 0)	{
-		m_fRotateTime -= fDeltaTime;	//Ã¿¾­¹ıfDeltaTime£¬ÅÄ×ÓĞı×ªµÄÊ±¼äÒ²ÉÙÁËfDeltaTime
-		if(m_fRotateTime <= 0){	//¾­¹ıÁË0.2sÒÔºó
-			paizi->SetSpriteRotation(m_fOldRotation);	//»Ö¸´ÅÄ×ÓµÄ³õÊ¼Ğı×ª½Ç
+	}
+	if (m_fRotateTime > 0) {
+		m_fRotateTime -= fDeltaTime;	//æ¯ç»è¿‡fDeltaTimeï¼Œæ‹å­æ—‹è½¬çš„æ—¶é—´ä¹Ÿå°‘äº†fDeltaTime
+		if (m_fRotateTime <= 0) {	//ç»è¿‡äº†0.2sä»¥å
+			paizi->SetSpriteRotation(m_fOldRotation);	//æ¢å¤æ‹å­çš„åˆå§‹æ—‹è½¬è§’
 		}
 	}
 
 }
 //=============================================================================
 //
-// ±¾¾ÖÓÎÏ·½áÊø
+// æœ¬å±€æ¸¸æˆç»“æŸ
 void CGameMain::GameEnd()
 {
 }
-//Ê¹ÅÄ×ÓµÄÎ»ÖÃºÍÊó±êÒ»ÖÂ
-void CGameMain::OnMouseMove( const float fMouseX, const float fMouseY ){
-	if(m_iGameState == 4)
-        paizi->SetSpritePosition(fMouseX, fMouseY);	//Ê¹ÅÄ×ÓµÄÎ»ÖÃºÍÊó±êÒ»ÖÂ
+//ä½¿æ‹å­çš„ä½ç½®å’Œé¼ æ ‡ä¸€è‡´
+void CGameMain::OnMouseMove(const float fMouseX, const float fMouseY) {
+	if (m_iGameState == 4)
+		paizi->SetSpritePosition(fMouseX, fMouseY);	//ä½¿æ‹å­çš„ä½ç½®å’Œé¼ æ ‡ä¸€è‡´
 }
 //
-void CGameMain::OnMouseClick( const int iMouseType, const float fMouseX, const float fMouseY ){
-	if(iMouseType == MOUSE_LEFT && m_iGameState == 4)	//Êó±ê×ó¼ü°´ÏÂ
+void CGameMain::OnMouseClick(const int iMouseType, const float fMouseX, const float fMouseY) {
+	if (iMouseType == MOUSE_LEFT && m_iGameState == 4)	//é¼ æ ‡å·¦é”®æŒ‰ä¸‹
 	{
-		paizi->SetSpriteRotation(m_fOldRotation - 20);		//ÉèÖÃÅÄ×ÓµÄĞı×ª½Ç£¬Îª³õÊ¼Öµ-10
-		m_fRotateTime	=	0.2f;	//ÅÄ´òµÄÊ±¼ä¼ä¸ô 0.2s£¬¼´0.2sºó»Ö¸´ÅÄ×Ó³õÊ¼½Ç¶È
-        		//±éÀúÅĞ¶¨ÎÃ×ÓÊÇ·ñ±»»÷ÖĞ
-		float fX,fY;
-		for(int i=0;i<m_mosquitos.size();i++){		//±éÀúvectorÖĞµÄÎÃ×Ó
-			fX = m_mosquitos[i]->cs->GetSpritePositionX();	//»ñÈ¡ÎÃ×ÓËùÔÚµÄºá×ø±ê
-			fY = m_mosquitos[i]->cs->GetSpritePositionY();	//»ñÈ¡ÎÃ×ÓËùÔÚµÄ×İ×ø±ê
-			if(paizi->IsPointInSprite(fX,fY))			//ÅĞ¶ÏÎÃ×ÓÊÇ·ñÔÚÅÄ×ÓµÄ·¶Î§ÄÚ
+		paizi->SetSpriteRotation(m_fOldRotation - 20);		//è®¾ç½®æ‹å­çš„æ—‹è½¬è§’ï¼Œä¸ºåˆå§‹å€¼-10
+		m_fRotateTime = 0.2f;	//æ‹æ‰“çš„æ—¶é—´é—´éš” 0.2sï¼Œå³0.2såæ¢å¤æ‹å­åˆå§‹è§’åº¦
+		//éå†åˆ¤å®šèšŠå­æ˜¯å¦è¢«å‡»ä¸­
+		float fX, fY;
+		for (int i = 0; i < m_mosquitos.size(); i++) {		//éå†vectorä¸­çš„èšŠå­
+			fX = m_mosquitos[i]->cs->GetSpritePositionX();	//è·å–èšŠå­æ‰€åœ¨çš„æ¨ªåæ ‡
+			fY = m_mosquitos[i]->cs->GetSpritePositionY();	//è·å–èšŠå­æ‰€åœ¨çš„çºµåæ ‡
+			if (paizi->IsPointInSprite(fX, fY))			//åˆ¤æ–­èšŠå­æ˜¯å¦åœ¨æ‹å­çš„èŒƒå›´å†…
 			{
-				m_mosquitos[i]->cs->DeleteSprite();	//É¾³ı¸ÃÎÃ×Ó
-				if(m_mosquitos[i]->speed<25){//Ã¿´òµ½µÄ·É³æµÄËÙ¶È¼Ó·Ö
-                    m_iGameScore+= m_mosquitos[i]->speed/5;
-                }else {
-                    m_iGameScore+= (m_mosquitos[i]->speed/5 + m_mosquitos[i]->speed/10);
-                }
+				m_mosquitos[i]->cs->DeleteSprite();	//åˆ é™¤è¯¥èšŠå­
+				if (m_mosquitos[i]->speed < 25) {//æ¯æ‰“åˆ°çš„é£è™«çš„é€Ÿåº¦åŠ åˆ†
+					m_iGameScore += m_mosquitos[i]->speed / 5;
+				}
+				else {
+					m_iGameScore += (m_mosquitos[i]->speed / 5 + m_mosquitos[i]->speed / 10);
+				}
 				score->SetTextValue(m_iGameScore);
-                break;
+				break;
 			}
 		}
 	}
 }
 
-void CGameMain::OnKeyDown( const int iKey, const bool bAltPress, const bool bShiftPress, const bool bCtrlPress ){
-	if( KEY_SPACE == iKey && 2 ==  m_iGameState )	//°´ÏÂ¿Õ¸ñÇÒÓÎÏ·×´Ì¬Îª2Ê±
+void CGameMain::OnKeyDown(const int iKey, const bool bAltPress, const bool bShiftPress, const bool bCtrlPress) {
+	if (KEY_SPACE == iKey && 2 == m_iGameState)	//æŒ‰ä¸‹ç©ºæ ¼ä¸”æ¸¸æˆçŠ¶æ€ä¸º2æ—¶
 	{
-		m_iGameState =	3;	//ÉèÖÃÓÎÏ·×´Ì¬½øÈëµ¹¼ÆÊ±£¬¼´3
-		countdown->SetSpriteVisible(true);	//ÏÔÊ¾µ¹¼ÆÊ±ÎÄ±¾¿ò
-		kaishi->SetSpriteVisible(false);		//Òş²Ø¡°¿Õ¸ñ¿ªÊ¼¡±
-        m_iGameScore = 0.f;		//³õÊ¼»¯ĞÂÒ»ÂÖÓÎÏ··ÖÊı
-		m_fGameTime = 30.f;		//³õÊ¼»¯ĞÂÒ»ÂÖÓÎÏ·Ê±¼ä
+		m_iGameState = 3;	//è®¾ç½®æ¸¸æˆçŠ¶æ€è¿›å…¥å€’è®¡æ—¶ï¼Œå³3
+		countdown->SetSpriteVisible(true);	//æ˜¾ç¤ºå€’è®¡æ—¶æ–‡æœ¬æ¡†
+		kaishi->SetSpriteVisible(false);		//éšè—â€œç©ºæ ¼å¼€å§‹â€
+		m_iGameScore = 0.f;		//åˆå§‹åŒ–æ–°ä¸€è½®æ¸¸æˆåˆ†æ•°
+		m_fGameTime = 30.f;		//åˆå§‹åŒ–æ–°ä¸€è½®æ¸¸æˆæ—¶é—´
 		score->SetTextValue(m_iGameScore);
 		gameTime->SetTextValue(m_fGameTime);
-		for(int i=0;i<m_mosquitos.size();i++){	//É¾³ıÉÏÒ»ÂÖÓÎÏ·ÖĞÊ£ÓàµÄÎÃ×Ó
+		for (int i = 0; i < m_mosquitos.size(); i++) {	//åˆ é™¤ä¸Šä¸€è½®æ¸¸æˆä¸­å‰©ä½™çš„èšŠå­
 			m_mosquitos[i]->cs->DeleteSprite();
 		}
-		m_mosquitos.clear();	//Çå¿Õvector
+		m_mosquitos.clear();	//æ¸…ç©ºvector
 	}
+	//if (KEY_H == iKey) {
+	//	char SqlText[256];	//sqlè¯­å¥
+	//	MYSQL mysql;		//å¥æŸ„
+	//	MYSQL_RES* res; 	//ç»“æœé›†
+	//	MYSQL_FIELD* fd; //å­—æ®µä¿¡æ¯
+	//	MYSQL_ROW row;	//ä¸€è¡Œæ•°æ®
+	//	//è¿æ¥æ•°æ®åº“test
+	//	mysql_init(&mysql);
+	//	if (!mysql_real_connect(&mysql, "localhost", "root", "030425", "test", 3306, nullptr, 0)) {
+	//		puts("æ•°æ®åº“è¿æ¥å¤±è´¥");
+	//		error->SetTextValue(404);
+	//		mysql_close(&mysql);
+	//		//return false;
+	//	}
+	//	else {
+	//		puts("æ•°æ®åº“è¿æ¥æˆåŠŸ");
+	//	}
+	//	sprintf_s(SqlText, "create table animals(id int(4) not null primary key auto_increment,name char(20) not null, kg double(7,1))");
+	//	if (mysql_query((MYSQL*)&mysql, SqlText)) {
+	//		puts("Can't create table");
+	//		printf("%s\n", mysql_error(&mysql));
+	//		mysql_close(&mysql);
+	//		//return false;
+	//	}
+	//	//æ’å…¥æ•°æ®
+	//	sprintf_s(SqlText, "insert into animals(name, kg) values ('chicken',6), ('dog', 4)");
+	//	if (mysql_query((MYSQL*)&mysql, SqlText)) {
+	//		puts("Can't insert data to table");
+	//		printf("%s\n", mysql_error(&mysql));
+	//		mysql_close(&mysql);
+	//		//return false;
+	//	}
+	//	//æŸ¥è¯¢æ•°æ®
+	//	sprintf_s(SqlText, "select * from animals");
+	//	if (!mysql_query((MYSQL*)&mysql, SqlText)) {
+	//		res = mysql_store_result(&mysql);
+	//		int i = (int)mysql_num_rows(res);
+	//		printf("Query: %s\n%d records \n", SqlText, i);
+	//		//è¾“å‡ºå„å­—æ®µå
+	//		for (i = 0; fd = mysql_fetch_field(res); i++)
+	//			printf("%-6s\t", fd->name);
+	//		puts("");
+	//		//ä¾æ¬¡è¯»å–å„æ¡è®°å½•
+	//		while (row = mysql_fetch_row(res))
+	//			printf("%-6s\t%-6s\t%-6s\n", row[0], row[1], row[2]);
+	//		mysql_free_result(res);
+	//	}
+	//}
 }
 /*
 void CGameMain::MakeSprite_NoFly(){
-    int minX		=	CSystem::GetScreenLeft() + 5;
-    int maxX		=	CSystem::GetScreenRight() - 5;
-    int minY		=	CSystem::GetScreenBottom() - 5;
-    int maxY		=	CSystem::GetScreenTop() + 5;
-    int	iPosX = 0, iPosY = 0;		//Ëæ»ú²úÉúµÄºá×İ×ø±êÎ»ÖÃ
-	int iLoop;	//Ñ­»·¿ØÖÆ±äÁ¿
+	int minX		=	CSystem::GetScreenLeft() + 5;
+	int maxX		=	CSystem::GetScreenRight() - 5;
+	int minY		=	CSystem::GetScreenBottom() - 5;
+	int maxY		=	CSystem::GetScreenTop() + 5;
+	int	iPosX = 0, iPosY = 0;		//éšæœºäº§ç”Ÿçš„æ¨ªçºµåæ ‡ä½ç½®
+	int iLoop;	//å¾ªç¯æ§åˆ¶å˜é‡
 	for( iLoop = 0; iLoop < m_iMosquitoCount; iLoop++ )
 	{
-		char *szName = CSystem::MakeSpriteName("wenzi",iLoop);	//ÀûÓÃiLoop²úÉú²»Í¬µÄÎÃ×ÓÃû
+		char *szName = CSystem::MakeSpriteName("wenzi",iLoop);	//åˆ©ç”¨iLoopäº§ç”Ÿä¸åŒçš„èšŠå­å
 		CSprite *wenzi = new CSprite(szName);
-		wenzi->CloneSprite("wenziTemplate");	//¸´ÖÆwenziTemplate
-		iPosX	=	CSystem::RandomRange(minX, maxX);		//Ëæ»ú²úÉúX×ø±ê
-		iPosY	=	CSystem::RandomRange(minY, maxY);		//Ëæ»ú²úÉúY×ø±ê
-		wenzi->SetSpritePosition(iPosX,iPosY);  //ÉèÖÃ²úÉúÎÃ×ÓµÄÎ»ÖÃ
-		m_mosquitos.push_back(wenzi);		//Ñ¹ÈëvectorÖĞ¼¯ÖĞ¹ÜÀí
+		wenzi->CloneSprite("wenziTemplate");	//å¤åˆ¶wenziTemplate
+		iPosX	=	CSystem::RandomRange(minX, maxX);		//éšæœºäº§ç”ŸXåæ ‡
+		iPosY	=	CSystem::RandomRange(minY, maxY);		//éšæœºäº§ç”ŸYåæ ‡
+		wenzi->SetSpritePosition(iPosX,iPosY);  //è®¾ç½®äº§ç”ŸèšŠå­çš„ä½ç½®
+		m_mosquitos.push_back(wenzi);		//å‹å…¥vectorä¸­é›†ä¸­ç®¡ç†
 	}
 }*/
 
-void CGameMain::MakeSprite_Fly( float fDeltaTime ){
-    m_fAppearTime -= fDeltaTime;	//¼ÆËã·É³æµÄÊ£Óà²úÉúÊ±¼ä
-    if(m_fAppearTime<0){	//Ê±¼äµ½£¬¿ÉÒÔ²úÉú·É³æ
-		m_fAppearTime = 0.5f;		//ÖØÖÃ²úÉú·É³æµÄÊ±¼ä
-		int iDir = CSystem::RandomRange(0,3);	//Ëæ»úÒ»¸ö·½Ïò
-		float fposX,fposY;
-        switch(iDir){
+void CGameMain::MakeSprite_Fly(float fDeltaTime) {
+	m_fAppearTime -= fDeltaTime;	//è®¡ç®—é£è™«çš„å‰©ä½™äº§ç”Ÿæ—¶é—´
+	if (m_fAppearTime < 0) {	//æ—¶é—´åˆ°ï¼Œå¯ä»¥äº§ç”Ÿé£è™«
+		m_fAppearTime = 0.5f;		//é‡ç½®äº§ç”Ÿé£è™«çš„æ—¶é—´
+		int iDir = CSystem::RandomRange(0, 3);	//éšæœºä¸€ä¸ªæ–¹å‘
+		float fposX = 0, fposY = 0;
+		switch (iDir) {
 		case 0:		//top
-			fposX = CSystem::RandomRange(m_fScreenLeft-5.f, m_fScreenRight+5.f);
-			fposY = CSystem::RandomRange(m_fScreenTop-5.f, m_fScreenTop+5.f);
+			fposX = CSystem::RandomRange(m_fScreenLeft - 5.f, m_fScreenRight + 5.f);
+			fposY = CSystem::RandomRange(m_fScreenTop - 5.f, m_fScreenTop + 5.f);
 			break;
 		case 1:		//bottom
-			fposX = CSystem::RandomRange(m_fScreenLeft-5.f, m_fScreenRight+5.f);
-			fposY =	CSystem::RandomRange(m_fScreenBottom, m_fScreenBottom+5.f);
+			fposX = CSystem::RandomRange(m_fScreenLeft - 5.f, m_fScreenRight + 5.f);
+			fposY = CSystem::RandomRange(m_fScreenBottom, m_fScreenBottom + 5.f);
 			break;
 		case 2:		//left
-			fposX = CSystem::RandomRange(m_fScreenLeft-5.f,m_fScreenLeft);
-			fposY = CSystem::RandomRange(m_fScreenTop-5.f, m_fScreenBottom+5.f);
+			fposX = CSystem::RandomRange(m_fScreenLeft - 5.f, m_fScreenLeft);
+			fposY = CSystem::RandomRange(m_fScreenTop - 5.f, m_fScreenBottom + 5.f);
 			break;
 		case 3:		//right
-			fposX = CSystem::RandomRange(m_fScreenRight, m_fScreenRight+5.f);
-			fposY = CSystem::RandomRange(m_fScreenTop-5.f, m_fScreenBottom+5.f);
+			fposX = CSystem::RandomRange(m_fScreenRight, m_fScreenRight + 5.f);
+			fposY = CSystem::RandomRange(m_fScreenTop - 5.f, m_fScreenBottom + 5.f);
 			break;
-        }
-        srand((unsigned)time(0));
-        int randTemplate = (rand() % (2-0+1))+ 0;//Ê¹ÓÃ (rand() % (b-a+1))+ a£¬È¡µÃ [a,b] µÄËæ»úÕûÊı
-		Mosquito *m = new Mosquito;	//¶¯Ì¬·ÖÅä¿Õ¼ä
-		m->speed = CSystem::RandomRange(10, 40);		//Ëæ»úËÙ¶È
-		switch(randTemplate){
-        case 0:
-            m->szName = CSystem::MakeSpriteName("wenzi",m_iMosquitoCount++);		//ÃüÃû
-            m->cs = new CSprite(m->szName);	//ÎÃ×Ó¾«ÁéÖ¸ÕëÒ²±£´æÔÚstructÊı×éÖĞ
-            m->cs ->CloneSprite("wenziTemplate");	//Á½ÖØÒıÓÃ
-            break;
-        case 1:
-            m->szName = CSystem::MakeSpriteName("maggot",m_iMosquitoCount++);		//ÃüÃû
-            m->cs = new CSprite(m->szName);	//ÎÃ×Ó¾«ÁéÖ¸ÕëÒ²±£´æÔÚstructÊı×éÖĞ
-            m->cs ->CloneSprite("maggotTemplate");	//Á½ÖØÒıÓÃ
-            break;
-        case 2:
-            m->szName = CSystem::MakeSpriteName("ufo",m_iMosquitoCount++);		//ÃüÃû
-            m->cs = new CSprite(m->szName);	//ÎÃ×Ó¾«ÁéÖ¸ÕëÒ²±£´æÔÚstructÊı×éÖĞ
-            m->cs ->CloneSprite("ufoTemplate");	//Á½ÖØÒıÓÃ
-            break;
 		}
-		m->cs ->SetSpritePosition(fposX, fposY);
-        m->next = NULL;
-		float fDesX = CSystem::RandomRange(m_fScreenLeft+15.f, m_fScreenRight-15.f);
-		float fDesY =  CSystem::RandomRange(m_fScreenTop+15.f, m_fScreenBottom-15.f);
-		m->cs ->SpriteMoveTo(fDesX, fDesY, m->speed, false);
-		m_mosquitos.push_back(m);		//Ñ¹ÈëvectorÖĞ¼¯ÖĞ¹ÜÀí
+		srand((unsigned)time(0));
+		int randTemplate = (rand() % (2 - 0 + 1)) + 0;//ä½¿ç”¨ (rand() % (b-a+1))+ aï¼Œå–å¾— [a,b] çš„éšæœºæ•´æ•°
+		Mosquito* m = new Mosquito;	//åŠ¨æ€åˆ†é…ç©ºé—´
+		m->speed = CSystem::RandomRange(10, 40);		//éšæœºé€Ÿåº¦
+		switch (randTemplate) {
+		case 0:
+			m->szName = CSystem::MakeSpriteName("wenzi", m_iMosquitoCount++);		//å‘½å
+			m->cs = new CSprite(m->szName);	//èšŠå­ç²¾çµæŒ‡é’ˆä¹Ÿä¿å­˜åœ¨structæ•°ç»„ä¸­
+			m->cs->CloneSprite("wenziTemplate");	//ä¸¤é‡å¼•ç”¨
+			break;
+		case 1:
+			m->szName = CSystem::MakeSpriteName("maggot", m_iMosquitoCount++);		//å‘½å
+			m->cs = new CSprite(m->szName);	//èšŠå­ç²¾çµæŒ‡é’ˆä¹Ÿä¿å­˜åœ¨structæ•°ç»„ä¸­
+			m->cs->CloneSprite("maggotTemplate");	//ä¸¤é‡å¼•ç”¨
+			break;
+		case 2:
+			m->szName = CSystem::MakeSpriteName("ufo", m_iMosquitoCount++);		//å‘½å
+			m->cs = new CSprite(m->szName);	//èšŠå­ç²¾çµæŒ‡é’ˆä¹Ÿä¿å­˜åœ¨structæ•°ç»„ä¸­
+			m->cs->CloneSprite("ufoTemplate");	//ä¸¤é‡å¼•ç”¨
+			break;
+		}
+		m->cs->SetSpritePosition(fposX, fposY);
+		m->next = NULL;
+		float fDesX = CSystem::RandomRange(m_fScreenLeft + 15.f, m_fScreenRight - 15.f);
+		float fDesY = CSystem::RandomRange(m_fScreenTop + 15.f, m_fScreenBottom - 15.f);
+		m->cs->SpriteMoveTo(fDesX, fDesY, m->speed, false);
+		m_mosquitos.push_back(m);		//å‹å…¥vectorä¸­é›†ä¸­ç®¡ç†
 	}
 }
+
+/*
+bool CGameMain::ConnectMySQL(int m_iGameScore) {
+	char SqlText[256];  // ç”¨äºå­˜å‚¨ SQL è¯­å¥çš„å­—ç¬¦ä¸²æ•°ç»„
+	MYSQL mysql;        // MySQL å¥æŸ„
+	MYSQL_RES* res;     // ç»“æœé›†
+	MYSQL_FIELD* fd;    // å­—æ®µä¿¡æ¯
+	MYSQL_ROW row;      // ä¸€è¡Œæ•°æ®
+
+	// åˆå§‹åŒ– MySQL å¥æŸ„
+	mysql_init(&mysql);
+
+	// è¿æ¥åˆ° MySQL æ•°æ®åº“ test
+	if (!mysql_real_connect(&mysql, "localhost", "root", "030425", "killinsect", 3303, nullptr, 0)) {
+		puts("æ•°æ®åº“è¿æ¥å¤±è´¥");
+		mysql_close(&mysql);
+		return false;
+	} else {
+		puts("æ•°æ®åº“è¿æ¥æˆåŠŸ");
+	}
+
+	sprintf(SqlText, "create table H_GameScore(id int(5) not null primary key auto_increment, source int(4) not null");
+	if (mysql_query((MYSQL*)&mysql, SqlText)) {
+		puts("Can't create table");
+		printf("%s\n", mysql_error(&mysql));
+	}
+
+	sprintf(SqlText, "insert into H_GameScore(source) values (%d)", m_iGameScore);
+	if (mysql_query((MYSQL*)&mysql, SqlText)) {
+		puts("Can't insert data to table");
+		printf("%s\n", mysql_error(&mysql));
+		mysql_close(&mysql);
+		return false;
+	}
+	mysql_close(&mysql);
+
+	return true;
+}*/
